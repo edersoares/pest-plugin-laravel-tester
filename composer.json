@@ -1,6 +1,6 @@
 {
-    "name": "pestphp/pest-plugin-template",
-    "description": "My awesome plugin",
+    "name": "dex/pest-plugin-laravel-tester",
+    "description": "Pest plugin to test Laravel components",
     "keywords": [
         "php",
         "framework",
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Pest\\PluginName\\": "src/"
+            "Dex\\Pest\\Plugin\\Laravel\\Tester\\": "src/"
         },
         "files": [
             "src/Autoload.php"
