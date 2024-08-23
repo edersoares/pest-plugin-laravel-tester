@@ -14,4 +14,5 @@ trait Tester
     use Eloquent;
     use Endpoint;
     use Relation;
+    use Validator;
 }
