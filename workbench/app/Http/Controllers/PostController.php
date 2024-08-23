@@ -9,6 +9,11 @@ use Workbench\App\Models\Post;
 
 class PostController
 {
+    public function index()
+    {
+        return Post::query()->get();
+    }
+
     public function store(Request $request)
     {
         return Post::query()->create($request->all());

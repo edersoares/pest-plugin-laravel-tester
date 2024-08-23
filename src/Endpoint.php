@@ -17,6 +17,15 @@ trait Endpoint
         return $this;
     }
 
+    public function toHaveIndexEndpoint()
+    {
+        $models = $this->factory->count(3)->create();
+
+        return $this->getJson($this->endpoint)
+            ->assertOk()
+            ->assertJson($models->toArray());
+    }
+
     public function toHaveStoreEndpoint()
     {
         $modelAttributes = $this->factory->make()->toArray();

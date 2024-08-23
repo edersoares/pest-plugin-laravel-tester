@@ -44,6 +44,7 @@ describe('Endpoint', function () {
     beforeEach()->eloquent(Post::class);
     beforeEach()->endpoint('/api/post');
 
+    test()->toHaveIndexEndpoint();
     test()->toHaveStoreEndpoint();
     test()->toHaveUpdateEndpoint();
     test()->toHaveDestroyEndpoint();
