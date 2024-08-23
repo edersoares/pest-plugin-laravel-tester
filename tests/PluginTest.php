@@ -11,3 +11,14 @@ describe('Post', function () {
     test()->toBeUpdate();
     test()->toBeDelete();
 });
+
+describe('Custom factory', function () {
+    beforeEach()->eloquent(Post::class);
+    beforeEach()->factory(fn ($factory) => $factory->state([
+        'title' => 'Laravel Tester',
+    ]));
+
+    test()->toBeCreate()->assertDatabaseHas(Post::class, [
+        'title' => 'Laravel Tester',
+    ]);
+});
