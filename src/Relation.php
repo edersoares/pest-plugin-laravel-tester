@@ -30,4 +30,15 @@ trait Relation
 
         return test();
     }
+
+    public function toHaveHasOneRelation(string $class, string $relation)
+    {
+        $model = $this->factory
+            ->has($class::factory(), $relation)
+            ->create();
+
+        $this->assertInstanceOf($class, $model->getAttribute($relation));
+
+        return test();
+    }
 }
