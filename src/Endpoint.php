@@ -14,4 +14,17 @@ trait Endpoint
 
         return $this;
     }
+
+    public function toHaveStoreEndpoint()
+    {
+        $modelAttributes = $this->factory->make()->toArray();
+
+        $response = $this->postJson($this->endpoint, $modelAttributes)
+            ->assertCreated()
+            ->assertJson($modelAttributes);
+
+        $this->assertDatabaseCount($this->class, 1);
+
+        return $response;
+    }
 }

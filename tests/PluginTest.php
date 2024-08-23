@@ -39,3 +39,10 @@ describe('Relation', function () {
     test()->toHaveHasManyRelation(Comment::class, 'comments');
     test()->toHaveHasOneRelation(Comment::class, 'latestComment');
 });
+
+describe('Endpoint', function () {
+    beforeEach()->eloquent(Post::class);
+    beforeEach()->endpoint('/api/post');
+
+    test()->toHaveStoreEndpoint();
+});
