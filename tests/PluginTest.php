@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Workbench\App\Models\Comment;
 use Workbench\App\Models\Post;
 use Workbench\App\Models\User;
 
@@ -35,4 +36,5 @@ describe('Relation', function () {
     beforeEach()->eloquent(Post::class);
 
     test()->toHaveBelongsToRelation(User::class, 'user');
+    test()->toHaveHasManyRelation(Comment::class, 'comments');
 });

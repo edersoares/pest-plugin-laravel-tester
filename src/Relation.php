@@ -18,4 +18,16 @@ trait Relation
 
         return test();
     }
+
+    public function toHaveHasManyRelation(string $class, string $relation)
+    {
+        $model = $this->factory
+            ->has($class::factory(), $relation)
+            ->create();
+
+        $this->assertContainsOnlyInstancesOf($class, $model->getAttribute($relation));
+        $this->assertCount(1, $model->getAttribute($relation));
+
+        return test();
+    }
 }
