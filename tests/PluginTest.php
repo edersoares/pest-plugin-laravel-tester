@@ -58,6 +58,15 @@ describe('Endpoint and soft deletes', function () {
     test()->toHaveDestroyEndpoint();
 });
 
+describe('Endpoint and data wrapping', function () {
+    beforeEach()->eloquent(User::class);
+    beforeEach()->endpoint('/api/user');
+
+    test()->wrap('data')->toHaveIndexEndpoint();
+    test()->endpoint('/api/user?nowrap=true')->toHaveIndexEndpoint();
+    test()->wrap('user')->toHaveShowEndpoint();
+});
+
 describe('Validator', function () {
     beforeEach()->eloquent(Post::class);
     beforeEach()->endpoint('/api/post');

@@ -12,9 +12,18 @@ trait Endpoint
 
     private string $endpoint;
 
+    private ?string $wrap = null;
+
     public function endpoint(string $endpoint): static
     {
         $this->endpoint = $endpoint;
+
+        return $this;
+    }
+
+    public function wrap(string $wrap): static
+    {
+        $this->wrap = $wrap;
 
         return $this;
     }
@@ -23,18 +32,24 @@ trait Endpoint
     {
         $models = $this->factory->count(3)->create();
 
+        $json = $this->wrapJson($models->toArray());
+
         return $this->getJson($this->endpoint)
             ->assertOk()
-            ->assertJson($models->toArray());
+            ->assertJson($json);
     }
 
     public function toHaveStoreEndpoint()
     {
         $modelAttributes = $this->factory->make()->toArray();
 
+        $json = $this->wrapJson(
+            $this->removeTimestamps($modelAttributes)
+        );
+
         $response = $this->postJson($this->endpoint, $modelAttributes)
             ->assertCreated()
-            ->assertJson($modelAttributes);
+            ->assertJson($json);
 
         $this->assertDatabaseCount($this->class, 1);
 
@@ -45,11 +60,13 @@ trait Endpoint
     {
         $modelCreated = $this->factory->create();
 
+        $json = $this->wrapJson(
+            $this->removeTimestamps($modelCreated->getAttributes())
+        );
+
         return $this->getJson($this->endpoint.'/'.$modelCreated->getKey())
             ->assertOk()
-            ->assertJson(
-                $this->removeTimestamps($modelCreated->getAttributes())
-            );
+            ->assertJson($json);
     }
 
     public function toHaveUpdateEndpoint()
@@ -57,9 +74,13 @@ trait Endpoint
         $modelCreated = $this->factory->create();
         $modelUpdateAttributes = $this->factory->make()->toArray();
 
+        $json = $this->wrapJson(
+            $this->removeTimestamps($modelUpdateAttributes)
+        );
+
         $response = $this->putJson($this->endpoint.'/'.$modelCreated->getKey(), $modelUpdateAttributes)
             ->assertOk()
-            ->assertJson($modelUpdateAttributes);
+            ->assertJson($json);
 
         $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->getAttributes()));
         $this->assertDatabaseHas($modelCreated->getTable(), $this->removeTimestamps($modelUpdateAttributes));
@@ -73,9 +94,13 @@ trait Endpoint
         $modelCreated = $this->factory->create();
         $attributes = $this->removeTimestamps($modelCreated->getAttributes());
 
+        $json = $this->wrapJson(
+            $this->removeTimestamps($attributes)
+        );
+
         $response = $this->deleteJson($this->endpoint.'/'.$modelCreated->getKey())
             ->assertOk()
-            ->assertJson($attributes);
+            ->assertJson($json);
 
         if (in_array(SoftDeletes::class, class_uses_recursive($modelCreated), true)) {
             $this->assertSoftDeleted($modelCreated->getTable(), deletedAtColumn: $modelCreated->getDeletedAtColumn());
@@ -86,5 +111,18 @@ trait Endpoint
         }
 
         return $response;
+    }
+
+    protected function wrapJson(array $data): array
+    {
+        $result = [];
+
+        if ($this->wrap) {
+            data_set($result, $this->wrap, $data);
+        } else {
+            return $data;
+        }
+
+        return $result;
     }
 }
