@@ -45,4 +45,5 @@ describe('Endpoint', function () {
     beforeEach()->endpoint('/api/post');
 
     test()->toHaveStoreEndpoint();
+    test()->toHaveUpdateEndpoint();
 });
