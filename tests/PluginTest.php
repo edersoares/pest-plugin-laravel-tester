@@ -39,3 +39,21 @@ describe('Relation', function () {
     test()->toHaveHasManyRelation(Comment::class, 'comments');
     test()->toHaveHasOneRelation(Comment::class, 'latestComment');
 });
+
+describe('Endpoint', function () {
+    beforeEach()->eloquent(Post::class);
+    beforeEach()->endpoint('/api/post');
+
+    test()->toHaveIndexEndpoint();
+    test()->toHaveStoreEndpoint();
+    test()->toHaveShowEndpoint();
+    test()->toHaveUpdateEndpoint();
+    test()->toHaveDestroyEndpoint();
+});
+
+describe('Endpoint and soft deletes', function () {
+    beforeEach()->eloquent(User::class);
+    beforeEach()->endpoint('/api/user');
+
+    test()->toHaveDestroyEndpoint();
+});
