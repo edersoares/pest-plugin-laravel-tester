@@ -16,7 +16,7 @@ class Post extends Model
 
     protected $table = 'post';
 
-    protected $fillable = ['user_id', 'title'];
+    protected $fillable = ['user_id', 'title', 'content'];
 
     /**
      * @return BelongsTo<User, self>
