@@ -37,4 +37,5 @@ describe('Relation', function () {
 
     test()->toHaveBelongsToRelation(User::class, 'user');
     test()->toHaveHasManyRelation(Comment::class, 'comments');
+    test()->toHaveHasOneRelation(Comment::class, 'latestComment');
 });
