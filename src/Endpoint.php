@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait Endpoint
 {
+    use Eloquent;
+
     private string $endpoint;
 
     public function endpoint(string $endpoint): static
@@ -45,7 +47,9 @@ trait Endpoint
 
         return $this->getJson($this->endpoint.'/'.$modelCreated->getKey())
             ->assertOk()
-            ->assertJson($modelCreated->getAttributes());
+            ->assertJson(
+                $this->removeTimestamps($modelCreated->getAttributes())
+            );
     }
 
     public function toHaveUpdateEndpoint()
