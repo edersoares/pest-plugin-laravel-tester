@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Workbench\App\Models\Post;
 
-describe('Post', function () {
+describe('Eloquent', function () {
     beforeEach()->eloquent(Post::class);
 
     test()->toBeCreate();
