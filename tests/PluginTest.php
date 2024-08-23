@@ -30,3 +30,9 @@ describe('Soft deletes', function () {
 
     test()->toBeDelete();
 });
+
+describe('Relation', function () {
+    beforeEach()->eloquent(Post::class);
+
+    test()->toHaveBelongsToRelation(User::class, 'user');
+});
