@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\TestCase;
  */
 trait Tester
 {
+    use Endpoint;
     use Eloquent;
     use Relation;
 }
