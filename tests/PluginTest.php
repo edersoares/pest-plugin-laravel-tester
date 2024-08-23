@@ -48,3 +48,10 @@ describe('Endpoint', function () {
     test()->toHaveUpdateEndpoint();
     test()->toHaveDestroyEndpoint();
 });
+
+describe('Endpoint and soft deletes', function () {
+    beforeEach()->eloquent(User::class);
+    beforeEach()->endpoint('/api/user');
+
+    test()->toHaveDestroyEndpoint();
+});
