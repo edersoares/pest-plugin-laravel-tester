@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Workbench\App\Models\Post;
 
 describe('Eloquent', function () {
@@ -14,7 +15,7 @@ describe('Eloquent', function () {
 
 describe('Custom factory', function () {
     beforeEach()->eloquent(Post::class);
-    beforeEach()->factory(fn ($factory) => $factory->state([
+    beforeEach()->factory(fn (Factory $factory) => $factory->state([
         'title' => 'Laravel Tester',
     ]));
 
