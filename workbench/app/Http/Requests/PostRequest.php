@@ -10,6 +10,10 @@ class PostRequest extends FormRequest
 {
     public function rules(): array
     {
-        return ['title' => ['required', 'min:10', 'max:200'], 'content' => ['required', 'min:10']];
+        return [
+            'title' => ['required', 'min:10', 'max:200'],
+            'content' => ['required', 'min:10'],
+            'short' => ['required', 'size:8'],
+        ];
     }
 }
