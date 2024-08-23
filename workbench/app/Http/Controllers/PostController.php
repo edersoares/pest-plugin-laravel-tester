@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Workbench\App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Workbench\App\Http\Requests\PostRequest;
 use Workbench\App\Models\Post;
 
 class PostController
@@ -14,7 +14,7 @@ class PostController
         return Post::query()->get();
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         return Post::query()->create($request->all());
     }
@@ -24,7 +24,7 @@ class PostController
         return Post::query()->findOrFail($id);
     }
 
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, string $id)
     {
         $model = Post::query()->findOrFail($id);
 

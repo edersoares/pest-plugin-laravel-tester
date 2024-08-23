@@ -15,6 +15,7 @@ class CreatePostTable extends Migration
             $table->foreignId('user_id');
             $table->string('title');
             $table->text('content');
+            $table->string('short');
             $table->timestamps();
         });
     }

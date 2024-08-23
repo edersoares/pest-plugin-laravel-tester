@@ -18,6 +18,7 @@ class PostFactory extends Factory
             'user_id' => fn () => User::factory()->create(),
             'title' => $this->faker->words(5, true),
             'content' => $this->faker->sentence(5),
+            'short' => $this->faker->lexify('########'),
         ];
     }
 }

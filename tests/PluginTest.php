@@ -57,3 +57,13 @@ describe('Endpoint and soft deletes', function () {
 
     test()->toHaveDestroyEndpoint();
 });
+
+describe('Validator', function () {
+    beforeEach()->eloquent(Post::class);
+    beforeEach()->endpoint('/api/post');
+
+    test()->toValidateRequired('title');
+    test()->toValidateMin('title', 10);
+    test()->toValidateMax('title', 200);
+    test()->toValidateSize('short', 8);
+});
