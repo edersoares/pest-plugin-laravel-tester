@@ -64,4 +64,5 @@ describe('Validator', function () {
 
     test()->toValidateRequired('title');
     test()->toValidateMin('title', 10);
+    test()->toValidateMax('title', 200);
 });

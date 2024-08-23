@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
+use Illuminate\Support\Str;
+
 trait Validator
 {
     public function toValidateRequired(string $attribute)
@@ -44,6 +46,29 @@ trait Validator
         $newModel = $this->factory->make()->toArray();
 
         $newModel[$attribute] = substr($attribute, 0, $min - 1);
+
+        $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor($attribute);
+
+        return test();
+    }
+
+    public function toValidateMax(string $attribute, int $max)
+    {
+        $modelAttributes = $this->factory->make()->toArray();
+
+        $modelAttributes[$attribute] = Str::random($max + 1);
+
+        $this->postJson($this->endpoint, $modelAttributes)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrorFor($attribute);
+
+        $modelCreated = $this->factory->create();
+
+        $newModel = $this->factory->make()->toArray();
+
+        $newModel[$attribute] = Str::random($max + 1);
 
         $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
             ->assertUnprocessable()
