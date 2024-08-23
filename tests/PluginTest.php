@@ -63,4 +63,5 @@ describe('Validator', function () {
     beforeEach()->endpoint('/api/post');
 
     test()->toValidateRequired('title');
+    test()->toValidateMin('title', 10);
 });
