@@ -23,4 +23,13 @@ class PostController
 
         return $model;
     }
+
+    public function destroy(string $id)
+    {
+        $model = Post::query()->findOrFail($id);
+
+        $model->delete();
+
+        return $model;
+    }
 }
