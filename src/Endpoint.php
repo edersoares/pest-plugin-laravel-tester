@@ -39,6 +39,15 @@ trait Endpoint
         return $response;
     }
 
+    public function toHaveShowEndpoint()
+    {
+        $modelCreated = $this->factory->create();
+
+        return $this->getJson($this->endpoint.'/'.$modelCreated->getKey())
+            ->assertOk()
+            ->assertJson($modelCreated->getAttributes());
+    }
+
     public function toHaveUpdateEndpoint()
     {
         $modelCreated = $this->factory->create();

@@ -46,6 +46,7 @@ describe('Endpoint', function () {
 
     test()->toHaveIndexEndpoint();
     test()->toHaveStoreEndpoint();
+    test()->toHaveShowEndpoint();
     test()->toHaveUpdateEndpoint();
     test()->toHaveDestroyEndpoint();
 });

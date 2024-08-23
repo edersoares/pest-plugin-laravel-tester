@@ -19,6 +19,11 @@ class PostController
         return Post::query()->create($request->all());
     }
 
+    public function show(string $id)
+    {
+        return Post::query()->findOrFail($id);
+    }
+
     public function update(Request $request, string $id)
     {
         $model = Post::query()->findOrFail($id);
