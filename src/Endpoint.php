@@ -28,6 +28,14 @@ trait Endpoint
         return $this;
     }
 
+    public function doGetRequest()
+    {
+        $this->factory->create();
+
+        return $this->getJson($this->endpoint)
+            ->assertOk();
+    }
+
     public function toHaveIndexEndpoint()
     {
         $models = $this->factory->count(3)->create();
@@ -64,7 +72,7 @@ trait Endpoint
             $this->removeTimestamps($modelCreated->getAttributes())
         );
 
-        return $this->getJson($this->endpoint.'/'.$modelCreated->getKey())
+        return $this->getJson($this->endpoint . '/' . $modelCreated->getKey())
             ->assertOk()
             ->assertJson($json);
     }
@@ -78,7 +86,7 @@ trait Endpoint
             $this->removeTimestamps($modelUpdateAttributes)
         );
 
-        $response = $this->putJson($this->endpoint.'/'.$modelCreated->getKey(), $modelUpdateAttributes)
+        $response = $this->putJson($this->endpoint . '/' . $modelCreated->getKey(), $modelUpdateAttributes)
             ->assertOk()
             ->assertJson($json);
 
@@ -98,7 +106,7 @@ trait Endpoint
             $this->removeTimestamps($attributes)
         );
 
-        $response = $this->deleteJson($this->endpoint.'/'.$modelCreated->getKey())
+        $response = $this->deleteJson($this->endpoint . '/' . $modelCreated->getKey())
             ->assertOk()
             ->assertJson($json);
 
