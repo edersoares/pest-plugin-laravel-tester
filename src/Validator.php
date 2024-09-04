@@ -35,7 +35,7 @@ trait Validator
     {
         $modelAttributes = $this->factory->make()->toArray();
 
-        $modelAttributes[$attribute] = substr((string) $modelAttributes[$attribute], 0, $min - 1);
+        $modelAttributes[$attribute] = Str::random($min - 1);
 
         $this->postJson($this->endpoint, $modelAttributes)
             ->assertUnprocessable()
