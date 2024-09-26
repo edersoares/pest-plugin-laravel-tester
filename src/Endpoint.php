@@ -69,7 +69,7 @@ trait Endpoint
         $modelCreated = $this->factory->create();
 
         $json = $this->wrapJson(
-            $this->removeTimestamps($modelCreated->getAttributes())
+            $this->removeTimestamps($modelCreated->toArray())
         );
 
         return $this->getJson($this->endpoint.'/'.$modelCreated->getKey())
@@ -90,7 +90,7 @@ trait Endpoint
             ->assertOk()
             ->assertJson($json);
 
-        $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->getAttributes()));
+        $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->toArray()));
         $this->assertDatabaseHas($modelCreated->getTable(), $this->removeTimestamps($modelUpdateAttributes));
         $this->assertDatabaseCount($modelCreated->getTable(), 1);
 
@@ -100,7 +100,7 @@ trait Endpoint
     public function toHaveDestroyEndpoint()
     {
         $modelCreated = $this->factory->create();
-        $attributes = $this->removeTimestamps($modelCreated->getAttributes());
+        $attributes = $this->removeTimestamps($modelCreated->toArray());
 
         $json = $this->wrapJson(
             $this->removeTimestamps($attributes)
@@ -114,7 +114,7 @@ trait Endpoint
             $this->assertSoftDeleted($modelCreated->getTable(), deletedAtColumn: $modelCreated->getDeletedAtColumn());
             $this->assertDatabaseCount($modelCreated->getTable(), 1);
         } else {
-            $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->getAttributes()));
+            $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->toArray()));
             $this->assertDatabaseCount($modelCreated->getTable(), 0);
         }
 
