@@ -7,11 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [Unreleased](first-commit-link/compare/2.0.0...HEAD)
+## [Unreleased](first-commit-link/compare/2.1.0...HEAD)
 
 ### Added
 
 - First version
+
+## [2.1.0](first-commit-link/compare/2.0.0...2.1.0) - 2024-09-26
+
+### What's Changed
+
+* Adds `doGetRequest` by @edersoares in https://github.com/edersoares/pest-plugin-laravel-tester/pull/12
+* Uses `toArray` instead of `getAttributes` by @edersoares in https://github.com/edersoares/pest-plugin-laravel-tester/pull/13
+* Adds `transformPayload` and `transformResult` by @edersoares in https://github.com/edersoares/pest-plugin-laravel-tester/pull/14
+* Uses random strings to validate `min` rule by @edersoares in https://github.com/edersoares/pest-plugin-laravel-tester/pull/15
+
+**Full Changelog**: https://github.com/edersoares/pest-plugin-laravel-tester/compare/2.0.0...2.1.0
 
 ## [2.0.0](first-commit-link/compare/first-commit-link...2.0.0) - 2024-08-23
 
