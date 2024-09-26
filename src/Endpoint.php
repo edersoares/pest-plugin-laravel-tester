@@ -28,6 +28,14 @@ trait Endpoint
         return $this;
     }
 
+    public function doGetRequest()
+    {
+        $this->factory->create();
+
+        return $this->getJson($this->endpoint)
+            ->assertOk();
+    }
+
     public function toHaveIndexEndpoint()
     {
         $models = $this->factory->count(3)->create();
