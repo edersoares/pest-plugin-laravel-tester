@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
+use Closure;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait Endpoint
@@ -13,6 +14,10 @@ trait Endpoint
     private string $endpoint;
 
     private ?string $wrap = null;
+
+    private ?Closure $transformPayload = null;
+
+    private ?Closure $transformResult = null;
 
     public function endpoint(string $endpoint): static
     {
@@ -24,6 +29,20 @@ trait Endpoint
     public function wrap(string $wrap): static
     {
         $this->wrap = $wrap;
+
+        return $this;
+    }
+
+    public function transformPayload(Closure $transformer): static
+    {
+        $this->transformPayload = $transformer;
+
+        return $this;
+    }
+
+    public function transformResult(Closure $transformer): static
+    {
+        $this->transformResult = $transformer;
 
         return $this;
     }
@@ -55,7 +74,9 @@ trait Endpoint
             $this->removeTimestamps($modelAttributes)
         );
 
-        $response = $this->postJson($this->endpoint, $modelAttributes)
+        $payload = $this->preparePayload($modelAttributes);
+
+        $response = $this->postJson($this->endpoint, $payload)
             ->assertCreated()
             ->assertJson($json);
 
@@ -86,7 +107,9 @@ trait Endpoint
             $this->removeTimestamps($modelUpdateAttributes)
         );
 
-        $response = $this->putJson($this->endpoint.'/'.$modelCreated->getKey(), $modelUpdateAttributes)
+        $payload = $this->preparePayload($modelUpdateAttributes);
+
+        $response = $this->putJson($this->endpoint.'/'.$modelCreated->getKey(), $payload)
             ->assertOk()
             ->assertJson($json);
 
@@ -126,11 +149,29 @@ trait Endpoint
         $result = [];
 
         if ($this->wrap) {
-            data_set($result, $this->wrap, $data);
+            data_set($result, $this->wrap, $this->prepareResult($data));
         } else {
-            return $data;
+            return $this->prepareResult($data);
         }
 
         return $result;
+    }
+
+    protected function preparePayload(array $data): array
+    {
+        if (empty($transformer = $this->transformPayload)) {
+            return $data;
+        }
+
+        return $transformer($data);
+    }
+
+    protected function prepareResult(array $data): array
+    {
+        if (empty($transformer = $this->transformResult)) {
+            return $data;
+        }
+
+        return $transformer($data);
     }
 }
