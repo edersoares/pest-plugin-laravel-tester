@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
 use Illuminate\Support\Str;
+use Pest\PendingCalls\TestCall;
+use Pest\Support\HigherOrderTapProxy;
 
 trait Validator
 {
-    public function toValidateRequired(string $attribute)
+    public function toValidateRequired(string $attribute): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -31,7 +33,7 @@ trait Validator
         return test();
     }
 
-    public function toValidateMin(string $attribute, int $min)
+    public function toValidateMin(string $attribute, int $min): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -54,7 +56,7 @@ trait Validator
         return test();
     }
 
-    public function toValidateMax(string $attribute, int $max)
+    public function toValidateMax(string $attribute, int $max): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -77,7 +79,7 @@ trait Validator
         return test();
     }
 
-    public function toValidateSize(string $attribute, int $size)
+    public function toValidateSize(string $attribute, int $size): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
 

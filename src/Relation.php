@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
+use Pest\PendingCalls\TestCall;
+use Pest\Support\HigherOrderTapProxy;
+
 trait Relation
 {
     use Eloquent;
 
-    public function toHaveBelongsToRelation(string $class, string $relation)
+    public function toHaveBelongsToRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory->create();
 
@@ -19,7 +22,7 @@ trait Relation
         return test();
     }
 
-    public function toHaveHasManyRelation(string $class, string $relation)
+    public function toHaveHasManyRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory
             ->has($class::factory(), $relation)
@@ -31,7 +34,7 @@ trait Relation
         return test();
     }
 
-    public function toHaveHasOneRelation(string $class, string $relation)
+    public function toHaveHasOneRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory
             ->has($class::factory(), $relation)

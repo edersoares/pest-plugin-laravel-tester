@@ -7,6 +7,8 @@ namespace Dex\Pest\Plugin\Laravel\Tester;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Testing\TestCase;
+use Pest\PendingCalls\TestCall;
+use Pest\Support\HigherOrderTapProxy;
 
 /**
  * @mixin TestCase
@@ -32,7 +34,7 @@ trait Eloquent
         return $this;
     }
 
-    public function toBeCreate()
+    public function toBeCreate(): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory->create();
 
@@ -42,7 +44,7 @@ trait Eloquent
         return test();
     }
 
-    public function toBeUpdate()
+    public function toBeUpdate(): HigherOrderTapProxy|TestCall
     {
         $modelCreated = $this->factory->create();
         $modelUpdateAttributes = $this->factory->make()->toArray();
@@ -59,7 +61,7 @@ trait Eloquent
         return test();
     }
 
-    public function toBeDelete()
+    public function toBeDelete(): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory->create();
 
