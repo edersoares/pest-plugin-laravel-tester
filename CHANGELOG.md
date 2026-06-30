@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [Unreleased](first-commit-link/compare/3.0.0...HEAD)
+## [Unreleased](first-commit-link/compare/4.0.0...HEAD)
 
 ### Added
 
 - First version
+
+## [4.0.0](first-commit-link/compare/3.0.0...4.0.0) - 2026-06-30
+
+**Full Changelog**: https://github.com/edersoares/pest-plugin-laravel-tester/compare/3.0.0...4.0.0
 
 ## [3.0.0](first-commit-link/compare/2.1.0...3.0.0) - 2026-06-30
 
