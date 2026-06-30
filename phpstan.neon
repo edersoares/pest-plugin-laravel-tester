@@ -4,3 +4,8 @@ parameters:
         - src
 
     reportUnmatchedIgnoredErrors: true
+
+    ignoreErrors:
+        -
+            identifiers:
+                - trait.unused
