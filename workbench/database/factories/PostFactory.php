@@ -19,6 +19,7 @@ class PostFactory extends Factory
             'title' => $this->faker->words(5, true),
             'content' => $this->faker->sentence(5),
             'short' => $this->faker->lexify('########'),
+            'status' => $this->faker->randomElement(['draft', 'published']),
         ];
     }
 }
