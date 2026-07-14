@@ -44,4 +44,19 @@ trait Relation
 
         return test();
     }
+
+    public function toHaveHasManyThroughRelation(string $class, string $through, string $relation): HigherOrderTapProxy|TestCall
+    {
+        $model = $this->factory->create();
+
+        $through::factory()
+            ->for($model)
+            ->has($class::factory())
+            ->create();
+
+        $this->assertContainsOnlyInstancesOf($class, $model->getAttribute($relation));
+        $this->assertCount(1, $model->getAttribute($relation));
+
+        return test();
+    }
 }

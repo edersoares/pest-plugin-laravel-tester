@@ -74,6 +74,12 @@ describe('Post relationships', function () {
     test()->toHaveHasManyRelation(Comment::class, 'comments');
     test()->toHaveHasOneRelation(Comment::class, 'latestComment');
 });
+
+describe('User relationships', function () {
+    beforeEach()->eloquent(User::class);
+
+    test()->toHaveHasManyThroughRelation(Comment::class, Post::class, 'comments');
+});
 ```
 
 ## REST API Endpoints

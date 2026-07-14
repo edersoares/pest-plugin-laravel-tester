@@ -40,6 +40,12 @@ describe('Relation', function () {
     test()->toHaveHasOneRelation(Comment::class, 'latestComment');
 });
 
+describe('HasManyThrough relation', function () {
+    beforeEach()->eloquent(User::class);
+
+    test()->toHaveHasManyThroughRelation(Comment::class, Post::class, 'comments');
+});
+
 describe('Endpoint', function () {
     beforeEach()->eloquent(Post::class);
     beforeEach()->endpoint('/api/post');
