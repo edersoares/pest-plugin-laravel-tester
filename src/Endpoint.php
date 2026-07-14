@@ -6,6 +6,7 @@ namespace Dex\Pest\Plugin\Laravel\Tester;
 
 use Closure;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Testing\TestResponse;
 
 trait Endpoint
 {
@@ -55,7 +56,10 @@ trait Endpoint
             ->assertOk();
     }
 
-    public function toHaveIndexEndpoint()
+    /**
+     * Tests an index resource endpoint.
+     */
+    public function toHaveIndexEndpoint(): TestResponse
     {
         $models = $this->factory->count(3)->create();
 
@@ -66,7 +70,10 @@ trait Endpoint
             ->assertJson($json);
     }
 
-    public function toHaveStoreEndpoint()
+    /**
+     * Tests a store resource endpoint.
+     */
+    public function toHaveStoreEndpoint(): TestResponse
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -85,7 +92,10 @@ trait Endpoint
         return $response;
     }
 
-    public function toHaveShowEndpoint()
+    /**
+     * Tests a show resource endpoint.
+     */
+    public function toHaveShowEndpoint(): TestResponse
     {
         $modelCreated = $this->factory->create();
 
@@ -98,7 +108,10 @@ trait Endpoint
             ->assertJson($json);
     }
 
-    public function toHaveUpdateEndpoint()
+    /**
+     * Tests a update resource endpoint.
+     */
+    public function toHaveUpdateEndpoint(): TestResponse
     {
         $modelCreated = $this->factory->create();
         $modelUpdateAttributes = $this->factory->make()->toArray();
@@ -120,7 +133,10 @@ trait Endpoint
         return $response;
     }
 
-    public function toHaveDestroyEndpoint()
+    /**
+     * Tests a destroy resource endpoint.
+     */
+    public function toHaveDestroyEndpoint(): TestResponse
     {
         $modelCreated = $this->factory->create();
         $attributes = $this->removeTimestamps($modelCreated->toArray());

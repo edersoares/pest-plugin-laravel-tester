@@ -10,6 +10,9 @@ use Pest\Support\HigherOrderTapProxy;
 
 trait Validator
 {
+    /**
+     * Tests if required rule is set for attribute.
+     */
     public function toValidateRequired(string $attribute): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
@@ -33,6 +36,9 @@ trait Validator
         return test();
     }
 
+    /**
+     * Tests if min rule is set for attribute.
+     */
     public function toValidateMin(string $attribute, int $min): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
@@ -56,6 +62,9 @@ trait Validator
         return test();
     }
 
+    /**
+     * Tests if max rule is set for attribute.
+     */
     public function toValidateMax(string $attribute, int $max): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();
@@ -79,6 +88,9 @@ trait Validator
         return test();
     }
 
+    /**
+     * Tests if size rule is set for attribute.
+     */
     public function toValidateSize(string $attribute, int $size): HigherOrderTapProxy|TestCall
     {
         $modelAttributes = $this->factory->make()->toArray();

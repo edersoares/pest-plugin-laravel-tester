@@ -19,6 +19,11 @@ trait Eloquent
 
     protected Factory $factory;
 
+    /**
+     * Sets the Eloquent model.
+     *
+     * @param class-string $class
+     */
     public function eloquent(string $class): static
     {
         $this->class = $class;
@@ -27,6 +32,9 @@ trait Eloquent
         return $this;
     }
 
+    /**
+     * Modifies the default factory.
+     */
     public function factory(callable $callable): static
     {
         $this->factory = $callable($this->factory);
@@ -34,6 +42,9 @@ trait Eloquent
         return $this;
     }
 
+    /**
+     * Tests if a model can be created.
+     */
     public function toBeCreate(): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory->create();
@@ -44,6 +55,9 @@ trait Eloquent
         return test();
     }
 
+    /**
+     * Tests if a model can be updated.
+     */
     public function toBeUpdate(): HigherOrderTapProxy|TestCall
     {
         $modelCreated = $this->factory->create();
@@ -61,6 +75,9 @@ trait Eloquent
         return test();
     }
 
+    /**
+     * Tests if a model can be deleted.
+     */
     public function toBeDelete(): HigherOrderTapProxy|TestCall
     {
         $model = $this->factory->create();
@@ -80,6 +97,9 @@ trait Eloquent
         return test();
     }
 
+    /**
+     * Removes timestamps from model to avoid false positive.
+     */
     protected function removeTimestamps(array $attributes): array
     {
         if (array_key_exists('created_at', $attributes)) {
