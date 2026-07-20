@@ -14,7 +14,7 @@ trait Relation
     /**
      * Tests a belongs to relation.
      *
-     * @param class-string $class
+     * @param  class-string  $class
      */
     public function toHaveBelongsToRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
     {
@@ -30,7 +30,7 @@ trait Relation
     /**
      * Tests a has many relation.
      *
-     * @param class-string $class
+     * @param  class-string  $class
      */
     public function toHaveHasManyRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
     {
@@ -47,7 +47,7 @@ trait Relation
     /**
      * Tests a has one relation.
      *
-     * @param class-string $class
+     * @param  class-string  $class
      */
     public function toHaveHasOneRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
     {
@@ -63,8 +63,8 @@ trait Relation
     /**
      * Tests a has many through relation.
      *
-     * @param class-string $class
-     * @param class-string $through
+     * @param  class-string  $class
+     * @param  class-string  $through
      */
     public function toHaveHasManyThroughRelation(string $class, string $through, string $relation): HigherOrderTapProxy|TestCall
     {

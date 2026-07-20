@@ -22,7 +22,7 @@ trait Eloquent
     /**
      * Sets the Eloquent model.
      *
-     * @param class-string $class
+     * @param  class-string  $class
      */
     public function eloquent(string $class): static
     {
