@@ -13,13 +13,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.4|^8.5",
-        "pestphp/pest": "^4",
-        "pestphp/pest-plugin": "^4",
-        "pestphp/pest-plugin-laravel": "^4"
+        "pestphp/pest": "^5",
+        "pestphp/pest-plugin": "^5",
+        "pestphp/pest-plugin-laravel": "^5"
     },
     "require-dev": {
         "orchestra/testbench": "^11",
-        "pestphp/pest-dev-tools": "^4"
+        "pestphp/pest-dev-tools": "^5"
     },
     "autoload": {
         "psr-4": {
