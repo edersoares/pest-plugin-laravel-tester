@@ -184,8 +184,8 @@ trait Endpoint
             ->assertOk()
             ->assertJson($json);
 
-        if ($this->usesSoftDeletes($modelCreated)) {
-            $this->assertSoftDeleted($modelCreated->getTable(), deletedAtColumn: $this->deletedAtColumn($modelCreated));
+        if ($modelCreated::isSoftDeletable()) {
+            $this->assertSoftDeleted($modelCreated);
             $this->assertDatabaseCount($modelCreated->getTable(), 1);
         } else {
             $this->assertDatabaseMissing($modelCreated->getTable(), $attributes);

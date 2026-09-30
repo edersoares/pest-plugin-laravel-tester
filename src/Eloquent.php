@@ -6,7 +6,6 @@ namespace Dex\Pest\Plugin\Laravel\Tester;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Testing\TestCase;
 use InvalidArgumentException;
 
@@ -94,8 +93,8 @@ trait Eloquent
 
         $model->delete();
 
-        if ($this->usesSoftDeletes($model)) {
-            $this->assertSoftDeleted($model->getTable(), $this->removeTimestamps($model->getAttributes()), deletedAtColumn: $this->deletedAtColumn($model));
+        if ($model::isSoftDeletable()) {
+            $this->assertSoftDeleted($model, $this->removeTimestamps($model->getAttributes()));
             $this->assertDatabaseCount($model->getTable(), 1);
         } else {
             $this->assertDatabaseMissing($model->getTable(), $this->removeTimestamps($model->getAttributes()));
@@ -134,24 +133,6 @@ trait Eloquent
         }
 
         return (string) $key;
-    }
-
-    /**
-     * Checks if the model uses soft deletes.
-     */
-    protected function usesSoftDeletes(Model $model): bool
-    {
-        return in_array(SoftDeletes::class, class_uses_recursive($model), true);
-    }
-
-    /**
-     * Returns the soft delete column of the model.
-     */
-    protected function deletedAtColumn(Model $model): ?string
-    {
-        $column = method_exists($model, 'getDeletedAtColumn') ? $model->getDeletedAtColumn() : null;
-
-        return is_string($column) ? $column : null;
     }
 
     /**
