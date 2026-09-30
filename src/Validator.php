@@ -53,7 +53,7 @@ trait Validator
 
         $newModel = $this->factory->make()->toArray();
 
-        $newModel[$attribute] = substr($attribute, 0, $min - 1);
+        $newModel[$attribute] = Str::random($min - 1);
 
         $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
             ->assertUnprocessable()
@@ -95,7 +95,7 @@ trait Validator
     {
         $modelAttributes = $this->factory->make()->toArray();
 
-        $modelAttributes[$attribute] = substr((string) $modelAttributes[$attribute], 0, $size - 1);
+        $modelAttributes[$attribute] = Str::random($size - 1);
 
         $this->postJson($this->endpoint, $modelAttributes)
             ->assertUnprocessable()
@@ -105,7 +105,7 @@ trait Validator
 
         $newModel = $this->factory->make()->toArray();
 
-        $newModel[$attribute] = substr($attribute, 0, $size - 1);
+        $newModel[$attribute] = Str::random($size - 1);
 
         $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
             ->assertUnprocessable()
