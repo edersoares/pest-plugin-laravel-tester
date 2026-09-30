@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Support\Str;
-use Pest\PendingCalls\TestCall;
-use Pest\Support\HigherOrderTapProxy;
 
+/**
+ * @mixin TestCase
+ */
 trait Validator
 {
+    use Endpoint;
+
     /**
      * Tests if required rule is set for attribute.
      */
-    public function toValidateRequired(string $attribute): HigherOrderTapProxy|TestCall
+    public function toValidateRequired(string $attribute): static
     {
-        $modelAttributes = $this->factory->make()->toArray();
+        $modelAttributes = $this->factory->makeOne()->attributesToArray();
 
         unset($modelAttributes[$attribute]);
 
@@ -23,25 +27,25 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        $modelCreated = $this->factory->create();
+        $modelCreated = $this->factory->createOne();
 
-        $newModel = $this->factory->make()->toArray();
+        $newModel = $this->factory->makeOne()->attributesToArray();
 
         unset($newModel[$attribute]);
 
-        $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
+        $this->putJson($this->endpoint.'/'.$this->keyOf($modelCreated), $newModel)
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if min rule is set for attribute.
      */
-    public function toValidateMin(string $attribute, int $min): HigherOrderTapProxy|TestCall
+    public function toValidateMin(string $attribute, int $min): static
     {
-        $modelAttributes = $this->factory->make()->toArray();
+        $modelAttributes = $this->factory->makeOne()->attributesToArray();
 
         $modelAttributes[$attribute] = Str::random($min - 1);
 
@@ -49,25 +53,25 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        $modelCreated = $this->factory->create();
+        $modelCreated = $this->factory->createOne();
 
-        $newModel = $this->factory->make()->toArray();
+        $newModel = $this->factory->makeOne()->attributesToArray();
 
         $newModel[$attribute] = Str::random($min - 1);
 
-        $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
+        $this->putJson($this->endpoint.'/'.$this->keyOf($modelCreated), $newModel)
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if max rule is set for attribute.
      */
-    public function toValidateMax(string $attribute, int $max): HigherOrderTapProxy|TestCall
+    public function toValidateMax(string $attribute, int $max): static
     {
-        $modelAttributes = $this->factory->make()->toArray();
+        $modelAttributes = $this->factory->makeOne()->attributesToArray();
 
         $modelAttributes[$attribute] = Str::random($max + 1);
 
@@ -75,25 +79,25 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        $modelCreated = $this->factory->create();
+        $modelCreated = $this->factory->createOne();
 
-        $newModel = $this->factory->make()->toArray();
+        $newModel = $this->factory->makeOne()->attributesToArray();
 
         $newModel[$attribute] = Str::random($max + 1);
 
-        $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
+        $this->putJson($this->endpoint.'/'.$this->keyOf($modelCreated), $newModel)
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if size rule is set for attribute.
      */
-    public function toValidateSize(string $attribute, int $size): HigherOrderTapProxy|TestCall
+    public function toValidateSize(string $attribute, int $size): static
     {
-        $modelAttributes = $this->factory->make()->toArray();
+        $modelAttributes = $this->factory->makeOne()->attributesToArray();
 
         $modelAttributes[$attribute] = Str::random($size - 1);
 
@@ -101,17 +105,17 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        $modelCreated = $this->factory->create();
+        $modelCreated = $this->factory->createOne();
 
-        $newModel = $this->factory->make()->toArray();
+        $newModel = $this->factory->makeOne()->attributesToArray();
 
         $newModel[$attribute] = Str::random($size - 1);
 
-        $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
+        $this->putJson($this->endpoint.'/'.$this->keyOf($modelCreated), $newModel)
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        $modelAttributes = $this->factory->make()->toArray();
+        $modelAttributes = $this->factory->makeOne()->attributesToArray();
 
         $modelAttributes[$attribute] = Str::random($size + 1);
 
@@ -119,16 +123,16 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        $modelCreated = $this->factory->create();
+        $modelCreated = $this->factory->createOne();
 
-        $newModel = $this->factory->make()->toArray();
+        $newModel = $this->factory->makeOne()->attributesToArray();
 
         $newModel[$attribute] = Str::random($size + 1);
 
-        $this->putJson("$this->endpoint/{$modelCreated->getKey()}", $newModel)
+        $this->putJson($this->endpoint.'/'.$this->keyOf($modelCreated), $newModel)
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 }

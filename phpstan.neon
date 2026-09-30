@@ -2,10 +2,7 @@ parameters:
     level: max
     paths:
         - src
+        - tests/Fixtures
+        - tests/TestCase.php
 
     reportUnmatchedIgnoredErrors: true
-
-    ignoreErrors:
-        -
-            identifiers:
-                - trait.unused
