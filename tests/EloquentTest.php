@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\AssertionFailedError;
 use Workbench\App\Models\Post;
 use Workbench\App\Models\User;
@@ -30,6 +31,28 @@ describe('Soft deletes', function () {
     beforeEach()->eloquent(User::class);
 
     test()->toBeDelete();
+});
+
+describe('Eloquent misconfiguration', function () {
+    test('eloquent rejects a model without factory', function () {
+        $model = new class extends Model {};
+
+        expect(fn () => $this->eloquent($model::class))
+            ->toThrow(InvalidArgumentException::class, 'must use the HasFactory trait');
+    });
+
+    test('keyOf rejects a non scalar route key', function () {
+        $model = new class extends Post
+        {
+            public function getRouteKey(): array
+            {
+                return [];
+            }
+        };
+
+        expect(fn () => (fn () => $this->keyOf($model))->call($this))
+            ->toThrow(InvalidArgumentException::class, 'must have a scalar route key');
+    });
 });
 
 describe('Eloquent failures', function () {

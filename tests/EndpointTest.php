@@ -48,6 +48,26 @@ describe('Endpoint and data wrapping', function () {
     test()->wrap('user')->toHaveShowEndpoint();
 });
 
+describe('Endpoint and transformers', function () {
+    beforeEach()->eloquent(Post::class);
+    beforeEach()->endpoint('/api/post');
+    beforeEach()->transformPayload(fn (array $payload) => [...$payload, 'ignored' => 'by fillable']);
+    beforeEach()->transformResult(fn (array $result) => collect($result)->except('status')->all());
+
+    test()->toHaveIndexEndpoint();
+    test()->toHaveStoreEndpoint();
+    test()->toHaveShowEndpoint();
+    test()->toHaveUpdateEndpoint();
+    test()->toHaveDestroyEndpoint();
+});
+
+describe('Endpoint GET request', function () {
+    beforeEach()->eloquent(Post::class);
+    beforeEach()->endpoint('/api/post');
+
+    test()->doGetRequest()->assertJsonCount(1);
+});
+
 describe('Endpoint failures', function () {
     beforeEach()->eloquent(Post::class);
 
