@@ -17,19 +17,17 @@ class UserController
         }
     }
 
-    public function show(string $id)
+    public function show(User $user)
     {
         return [
-            'user' => User::query()->findOrFail($id),
+            'user' => $user,
         ];
     }
 
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        $model = User::query()->findOrFail($id);
+        $user->delete();
 
-        $model->delete();
-
-        return $model;
+        return $user;
     }
 }

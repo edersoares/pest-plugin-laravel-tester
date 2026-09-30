@@ -90,7 +90,7 @@ trait Eloquent
     {
         $model = $this->factory->createOne();
 
-        $this->assertDatabaseHas($model->getTable(), $model->getAttributes());
+        $this->assertDatabaseHas($model->getTable(), $this->removeTimestamps($model->getAttributes()));
 
         $model->delete();
 
@@ -123,14 +123,14 @@ trait Eloquent
     }
 
     /**
-     * Returns the primary key of the model as a string, ready to be used in a URL.
+     * Returns the route key of the model as a string, ready to be used in a URL.
      */
     protected function keyOf(Model $model): string
     {
-        $key = $model->getKey();
+        $key = $model->getRouteKey();
 
         if (! is_scalar($key)) {
-            throw new InvalidArgumentException('The model ['.$model::class.'] must have a scalar primary key.');
+            throw new InvalidArgumentException('The model ['.$model::class.'] must have a scalar route key.');
         }
 
         return (string) $key;

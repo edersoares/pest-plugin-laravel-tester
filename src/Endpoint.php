@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,6 +41,10 @@ trait Endpoint
 
     public function wrap(string $wrap): static
     {
+        if ($wrap === '') {
+            throw new InvalidArgumentException('The wrap key must not be empty.');
+        }
+
         $this->wrap = $wrap;
 
         return $this;

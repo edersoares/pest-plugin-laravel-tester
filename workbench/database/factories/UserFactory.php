@@ -15,6 +15,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'slug' => $this->faker->unique()->slug(),
         ];
     }
 }
