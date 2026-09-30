@@ -7,8 +7,6 @@ namespace Dex\Pest\Plugin\Laravel\Tester;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Testing\TestCase;
-use Pest\PendingCalls\TestCall;
-use Pest\Support\HigherOrderTapProxy;
 
 /**
  * @mixin TestCase
@@ -45,20 +43,20 @@ trait Eloquent
     /**
      * Tests if a model can be created.
      */
-    public function toBeCreate(): HigherOrderTapProxy|TestCall
+    public function toBeCreate(): static
     {
         $model = $this->factory->create();
 
         $this->assertDatabaseHas($model->getTable(), $this->removeTimestamps($model->getAttributes()));
         $this->assertDatabaseCount($model->getTable(), 1);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if a model can be updated.
      */
-    public function toBeUpdate(): HigherOrderTapProxy|TestCall
+    public function toBeUpdate(): static
     {
         $modelCreated = $this->factory->create();
         $modelUpdateAttributes = $this->factory->make()->toArray();
@@ -72,13 +70,13 @@ trait Eloquent
         $this->assertDatabaseHas($modelUpdated->getTable(), $this->removeTimestamps($modelUpdated->getAttributes()));
         $this->assertDatabaseCount($modelUpdated->getTable(), 1);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if a model can be deleted.
      */
-    public function toBeDelete(): HigherOrderTapProxy|TestCall
+    public function toBeDelete(): static
     {
         $model = $this->factory->create();
 
@@ -94,7 +92,7 @@ trait Eloquent
             $this->assertDatabaseCount($model->getTable(), 0);
         }
 
-        return test();
+        return $this;
     }
 
     /**

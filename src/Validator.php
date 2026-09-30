@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Support\Str;
-use Pest\PendingCalls\TestCall;
-use Pest\Support\HigherOrderTapProxy;
 
+/**
+ * @mixin TestCase
+ */
 trait Validator
 {
     /**
      * Tests if required rule is set for attribute.
      */
-    public function toValidateRequired(string $attribute): HigherOrderTapProxy|TestCall
+    public function toValidateRequired(string $attribute): static
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -33,13 +35,13 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if min rule is set for attribute.
      */
-    public function toValidateMin(string $attribute, int $min): HigherOrderTapProxy|TestCall
+    public function toValidateMin(string $attribute, int $min): static
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -59,13 +61,13 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if max rule is set for attribute.
      */
-    public function toValidateMax(string $attribute, int $max): HigherOrderTapProxy|TestCall
+    public function toValidateMax(string $attribute, int $max): static
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -85,13 +87,13 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 
     /**
      * Tests if size rule is set for attribute.
      */
-    public function toValidateSize(string $attribute, int $size): HigherOrderTapProxy|TestCall
+    public function toValidateSize(string $attribute, int $size): static
     {
         $modelAttributes = $this->factory->make()->toArray();
 
@@ -129,6 +131,6 @@ trait Validator
             ->assertUnprocessable()
             ->assertJsonValidationErrorFor($attribute);
 
-        return test();
+        return $this;
     }
 }

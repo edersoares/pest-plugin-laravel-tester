@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
-use Pest\PendingCalls\TestCall;
-use Pest\Support\HigherOrderTapProxy;
+use Illuminate\Foundation\Testing\TestCase;
 
+/**
+ * @mixin TestCase
+ */
 trait Relation
 {
     use Eloquent;
@@ -16,7 +18,7 @@ trait Relation
      *
      * @param  class-string  $class
      */
-    public function toHaveBelongsToRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
+    public function toHaveBelongsToRelation(string $class, string $relation): static
     {
         $model = $this->factory->create();
 
@@ -24,7 +26,7 @@ trait Relation
         $this->assertDatabaseCount($model->getTable(), 1);
         $this->assertDatabaseCount($class, 1);
 
-        return test();
+        return $this;
     }
 
     /**
@@ -32,7 +34,7 @@ trait Relation
      *
      * @param  class-string  $class
      */
-    public function toHaveHasManyRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
+    public function toHaveHasManyRelation(string $class, string $relation): static
     {
         $model = $this->factory
             ->has($class::factory(), $relation)
@@ -41,7 +43,7 @@ trait Relation
         $this->assertContainsOnlyInstancesOf($class, $model->getAttribute($relation));
         $this->assertCount(1, $model->getAttribute($relation));
 
-        return test();
+        return $this;
     }
 
     /**
@@ -49,7 +51,7 @@ trait Relation
      *
      * @param  class-string  $class
      */
-    public function toHaveHasOneRelation(string $class, string $relation): HigherOrderTapProxy|TestCall
+    public function toHaveHasOneRelation(string $class, string $relation): static
     {
         $model = $this->factory
             ->has($class::factory(), $relation)
@@ -57,7 +59,7 @@ trait Relation
 
         $this->assertInstanceOf($class, $model->getAttribute($relation));
 
-        return test();
+        return $this;
     }
 
     /**
@@ -66,7 +68,7 @@ trait Relation
      * @param  class-string  $class
      * @param  class-string  $through
      */
-    public function toHaveHasManyThroughRelation(string $class, string $through, string $relation): HigherOrderTapProxy|TestCall
+    public function toHaveHasManyThroughRelation(string $class, string $through, string $relation): static
     {
         $model = $this->factory->create();
 
@@ -78,6 +80,6 @@ trait Relation
         $this->assertContainsOnlyInstancesOf($class, $model->getAttribute($relation));
         $this->assertCount(1, $model->getAttribute($relation));
 
-        return test();
+        return $this;
     }
 }

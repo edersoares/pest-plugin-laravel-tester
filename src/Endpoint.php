@@ -6,8 +6,12 @@ namespace Dex\Pest\Plugin\Laravel\Tester;
 
 use Closure;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Testing\TestResponse;
 
+/**
+ * @mixin TestCase
+ */
 trait Endpoint
 {
     use Eloquent;
