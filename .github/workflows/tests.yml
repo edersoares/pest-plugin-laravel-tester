@@ -23,7 +23,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
-          coverage: none
+          coverage: pcov
 
       - name: Setup Problem Matches
         run: |
@@ -34,4 +34,4 @@ jobs:
         run: composer update --${{ matrix.dependency-version }} --no-interaction --no-progress --ansi
 
       - name: Unit Tests
-        run: composer test:unit
+        run: composer test:coverage
