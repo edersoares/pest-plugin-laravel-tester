@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dex\Pest\Plugin\Laravel\Tester\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -18,13 +19,19 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Workbench\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
+        Factory::guessFactoryNamesUsing(function (string $modelName): string {
+            /** @var class-string<Factory<Model>> $factory */
+            $factory = 'Workbench\\Database\\Factories\\'.class_basename($modelName).'Factory';
 
-        Factory::guessModelNamesUsing(
-            fn ($factory) => 'Workbench\\App\\Models\\'.Str::replaceLast('Factory', '', class_basename($factory))
-        );
+            return $factory;
+        });
+
+        Factory::guessModelNamesUsing(function (Factory $factory): string {
+            /** @var class-string<Model> $model */
+            $model = 'Workbench\\App\\Models\\'.Str::replaceLast('Factory', '', class_basename($factory));
+
+            return $model;
+        });
 
         $this->loadLaravelMigrations();
     }

@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Dex\Pest\Plugin\Laravel\Tester;
 
 use Closure;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @mixin TestCase
+ */
 trait Endpoint
 {
     use Eloquent;
@@ -16,8 +21,14 @@ trait Endpoint
 
     private ?string $wrap = null;
 
+    /**
+     * @var (Closure(array<string, mixed>): array<string, mixed>)|null
+     */
     private ?Closure $transformPayload = null;
 
+    /**
+     * @var (Closure(array<array-key, mixed>): array<array-key, mixed>)|null
+     */
     private ?Closure $transformResult = null;
 
     public function endpoint(string $endpoint): static
@@ -34,6 +45,9 @@ trait Endpoint
         return $this;
     }
 
+    /**
+     * @param  Closure(array<string, mixed>): array<string, mixed>  $transformer
+     */
     public function transformPayload(Closure $transformer): static
     {
         $this->transformPayload = $transformer;
@@ -41,6 +55,9 @@ trait Endpoint
         return $this;
     }
 
+    /**
+     * @param  Closure(array<array-key, mixed>): array<array-key, mixed>  $transformer
+     */
     public function transformResult(Closure $transformer): static
     {
         $this->transformResult = $transformer;
@@ -48,9 +65,14 @@ trait Endpoint
         return $this;
     }
 
-    public function doGetRequest()
+    /**
+     * Creates a model and performs a GET request to the endpoint.
+     *
+     * @return TestResponse<Response>
+     */
+    public function doGetRequest(): TestResponse
     {
-        $this->factory->create();
+        $this->factory->createOne();
 
         return $this->getJson($this->endpoint)
             ->assertOk();
@@ -58,6 +80,8 @@ trait Endpoint
 
     /**
      * Tests an index resource endpoint.
+     *
+     * @return TestResponse<Response>
      */
     public function toHaveIndexEndpoint(): TestResponse
     {
@@ -72,10 +96,12 @@ trait Endpoint
 
     /**
      * Tests a store resource endpoint.
+     *
+     * @return TestResponse<Response>
      */
     public function toHaveStoreEndpoint(): TestResponse
     {
-        $modelAttributes = $this->factory->make()->toArray();
+        $modelAttributes = $this->factory->makeOne()->attributesToArray();
 
         $json = $this->wrapJson(
             $this->removeTimestamps($modelAttributes)
@@ -94,27 +120,31 @@ trait Endpoint
 
     /**
      * Tests a show resource endpoint.
+     *
+     * @return TestResponse<Response>
      */
     public function toHaveShowEndpoint(): TestResponse
     {
-        $modelCreated = $this->factory->create();
+        $modelCreated = $this->factory->createOne();
 
         $json = $this->wrapJson(
-            $this->removeTimestamps($modelCreated->toArray())
+            $this->removeTimestamps($modelCreated->attributesToArray())
         );
 
-        return $this->getJson($this->endpoint.'/'.$modelCreated->getKey())
+        return $this->getJson($this->endpoint.'/'.$this->keyOf($modelCreated))
             ->assertOk()
             ->assertJson($json);
     }
 
     /**
      * Tests a update resource endpoint.
+     *
+     * @return TestResponse<Response>
      */
     public function toHaveUpdateEndpoint(): TestResponse
     {
-        $modelCreated = $this->factory->create();
-        $modelUpdateAttributes = $this->factory->make()->toArray();
+        $modelCreated = $this->factory->createOne();
+        $modelUpdateAttributes = $this->factory->makeOne()->attributesToArray();
 
         $json = $this->wrapJson(
             $this->removeTimestamps($modelUpdateAttributes)
@@ -122,11 +152,11 @@ trait Endpoint
 
         $payload = $this->preparePayload($modelUpdateAttributes);
 
-        $response = $this->putJson($this->endpoint.'/'.$modelCreated->getKey(), $payload)
+        $response = $this->putJson($this->endpoint.'/'.$this->keyOf($modelCreated), $payload)
             ->assertOk()
             ->assertJson($json);
 
-        $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->toArray()));
+        $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->attributesToArray()));
         $this->assertDatabaseHas($modelCreated->getTable(), $this->removeTimestamps($modelUpdateAttributes));
         $this->assertDatabaseCount($modelCreated->getTable(), 1);
 
@@ -135,59 +165,71 @@ trait Endpoint
 
     /**
      * Tests a destroy resource endpoint.
+     *
+     * @return TestResponse<Response>
      */
     public function toHaveDestroyEndpoint(): TestResponse
     {
-        $modelCreated = $this->factory->create();
-        $attributes = $this->removeTimestamps($modelCreated->toArray());
+        $modelCreated = $this->factory->createOne();
+        $attributes = $this->removeTimestamps($modelCreated->attributesToArray());
 
-        $json = $this->wrapJson(
-            $this->removeTimestamps($attributes)
-        );
+        $json = $this->wrapJson($attributes);
 
-        $response = $this->deleteJson($this->endpoint.'/'.$modelCreated->getKey())
+        $response = $this->deleteJson($this->endpoint.'/'.$this->keyOf($modelCreated))
             ->assertOk()
             ->assertJson($json);
 
-        if (in_array(SoftDeletes::class, class_uses_recursive($modelCreated), true)) {
-            $this->assertSoftDeleted($modelCreated->getTable(), deletedAtColumn: $modelCreated->getDeletedAtColumn());
+        if ($this->usesSoftDeletes($modelCreated)) {
+            $this->assertSoftDeleted($modelCreated->getTable(), deletedAtColumn: $this->deletedAtColumn($modelCreated));
             $this->assertDatabaseCount($modelCreated->getTable(), 1);
         } else {
-            $this->assertDatabaseMissing($modelCreated->getTable(), $this->removeTimestamps($modelCreated->toArray()));
+            $this->assertDatabaseMissing($modelCreated->getTable(), $attributes);
             $this->assertDatabaseCount($modelCreated->getTable(), 0);
         }
 
         return $response;
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     * @return array<array-key, mixed>
+     */
     protected function wrapJson(array $data): array
     {
-        $result = [];
-
-        if ($this->wrap) {
-            data_set($result, $this->wrap, $this->prepareResult($data));
-        } else {
+        if ($this->wrap === null) {
             return $this->prepareResult($data);
         }
+
+        $result = [];
+
+        Arr::set($result, $this->wrap, $this->prepareResult($data));
 
         return $result;
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
     protected function preparePayload(array $data): array
     {
-        if (empty($transformer = $this->transformPayload)) {
+        if ($this->transformPayload === null) {
             return $data;
         }
 
-        return $transformer($data);
+        return ($this->transformPayload)($data);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     * @return array<array-key, mixed>
+     */
     protected function prepareResult(array $data): array
     {
-        if (empty($transformer = $this->transformResult)) {
+        if ($this->transformResult === null) {
             return $data;
         }
 
-        return $transformer($data);
+        return ($this->transformResult)($data);
     }
 }
