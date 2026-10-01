@@ -24,6 +24,21 @@ describe('Endpoint and soft deletes', function () {
     test()->toHaveDestroyEndpoint();
 });
 
+describe('Endpoint and custom route key', function () {
+    beforeEach()->eloquent(User::class);
+    beforeEach()->endpoint('/api/user');
+
+    test()->wrap('user')->toHaveShowEndpoint();
+    test()->toHaveDestroyEndpoint();
+
+    test('requests use the route key instead of the primary key', function () {
+        $user = User::factory()->createOne();
+
+        $this->getJson('/api/user/'.$user->getKey())->assertNotFound();
+        $this->getJson('/api/user/'.$user->slug)->assertOk();
+    });
+});
+
 describe('Endpoint and data wrapping', function () {
     beforeEach()->eloquent(User::class);
     beforeEach()->endpoint('/api/user');
@@ -35,6 +50,11 @@ describe('Endpoint and data wrapping', function () {
 
 describe('Endpoint failures', function () {
     beforeEach()->eloquent(Post::class);
+
+    test('wrap rejects an empty key', function () {
+        expect(fn () => $this->wrap(''))
+            ->toThrow(InvalidArgumentException::class, 'The wrap key must not be empty.');
+    });
 
     test('toHaveIndexEndpoint fails when the route does not exist', function () {
         expect(fn () => $this->endpoint('/api/missing')->toHaveIndexEndpoint())

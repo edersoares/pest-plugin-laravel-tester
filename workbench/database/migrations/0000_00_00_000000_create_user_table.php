@@ -13,6 +13,7 @@ class CreateUserTable extends Migration
         Schema::create('user', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

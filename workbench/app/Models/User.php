@@ -16,7 +16,12 @@ class User extends Model
 
     protected $table = 'user';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'slug'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     /**
      * @return HasManyThrough<Comment, Post, User>
