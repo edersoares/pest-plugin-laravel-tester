@@ -98,6 +98,12 @@ describe('Post API', function () {
 });
 ```
 
+To only check that the endpoint answers `200` after creating a model, without comparing the body:
+
+```php
+test()->doGetRequest();
+```
+
 When the response wraps data under a key (e.g., Laravel's API resources or pagination):
 
 ```php
